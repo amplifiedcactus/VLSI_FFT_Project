@@ -11,7 +11,7 @@
 
 //Define twiddle factor registers
 
-//Define registers for storing results of each stage (cache)
+//Define 2 sets registers for storing inputs and results of each stage (cache)
 
 //For each stage, instantiate a FFTStage module with the correct inputs (from storage registers), and connect the outputs to the cache
 
