@@ -13,6 +13,8 @@
 
 //Define 2 sets registers for storing inputs and results of each stage (cache)
 
-//For each stage, instantiate a FFTStage module with the correct inputs (from storage registers), and connect the outputs to the cache
+//instantiate FFTStage module 
+
+//during each FFT stage state, assign the correct input and output cache registers to the FFTStage inputs and outputs
 
 
