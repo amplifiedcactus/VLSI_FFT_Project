@@ -1,5 +1,6 @@
 # VLSI_FFT_Project
-    The implementation of an FFT (Fast Fourier Transform) system using the Radix-2 Cooley-Tukey
+
+The implementation of an FFT (Fast Fourier Transform) system using the Radix-2 Cooley-Tukey
 algorithm represents a significant leap forward in the realm of digital signal processing and
 computational techniques. This algorithm efficiently transforms time-domain signals into the
 frequency domain, dramatically reducing processing time and complexity, making it invaluable for
@@ -8,7 +9,8 @@ Engaging in this project which is centered around the Radix-2 Cooley-Tukey FFT n
 one’s understanding of advanced algorithms but will also enhances practical skills in HDL
 programming, simulation, FPGA implementation, and debugging. These abilities are crucial for
 career in Digital Design and Embedded System
-    This project involves designing a 16-point Fast Fourier Transform (FFT) chip using a finite state
+
+This project involves designing a 16-point Fast Fourier Transform (FFT) chip using a finite state
 machine (FSM) for control. The core computation leverages a Radix-2 butterfly unit and performs
 the computation in multiple stages. The chip will process 16-bit complex numbers, with 16 bits
 dedicated to both the real and imaginary components. A 32-bit data bus will be used to transfer
