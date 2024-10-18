@@ -5,22 +5,11 @@
 module MultiplyAddUnit (
     input wire Clk, Rst,
     input wire [31:0] A, B, w,
-    output wire [31:0] Y, Z,
+    output wire [31:0] Y, Z
 );
     
     //reg for real/imaginary components of operands
     reg signed [15:0] Ar, Ai, Br, Bi, wr, wi, Yr, Yi, Zr, Zi;
-
-    assign Ar = A[31:16];
-    assign Ai = A[15:0];
-    assign Br = B[31:16];
-    assign Bi = B[15:0];
-    assign wr = w[31:16];
-    assign wi = w[15:0];
-    assign Yr = Y[31:16];
-    assign Yi = Y[15:0];
-    assign Zr = Z[31:16];
-    assign Zi = Z[15:0];
 
     //reg for result of B*w
     reg signed [31:0] Bwr, Bwra, Bwrb, Bwi, Bwia, Bwib;
@@ -31,6 +20,13 @@ module MultiplyAddUnit (
 
     always@(posedge Clk)
     begin
+        //Split A, B and w into real and imaginary parts
+        Ar <= A[31:16];
+        Ai <= A[15:0];
+        Br <= B[31:16];
+        Bi <= B[15:0];
+        wr <= w[31:16];
+        wi <= w[15:0];
         //Calculate real part of B*w
         Bwra <= Br*wr;
         Bwrb <= Bi*wi;
@@ -51,6 +47,11 @@ module MultiplyAddUnit (
         Zr <= nABwr[32:17];
         Zi <= nABwi[32:17];
     end
+
+    assign Y[31:16] = Yr;
+    assign Y[15:0] = Yi;
+    assign Z[31:16] = Zr;
+    assign  Z[15:0] = Zi;
 
 
 
