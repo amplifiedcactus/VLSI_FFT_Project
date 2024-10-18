@@ -12,7 +12,7 @@ module tb_shiftRegister;
         .Y(Y),
         .Z(Z),
         .Clk(Clk)
-    )
+    );
 
     initial begin
         //Test two sets of random number inputs
