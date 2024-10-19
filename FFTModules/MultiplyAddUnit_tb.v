@@ -17,12 +17,12 @@ module tb_shiftRegister;
     initial begin
         //Test two sets of random number inputs
         Clk = 0;
-        //Ar = 0.302734375, Ai = 0.1748046875
-        A = 8'013600B3
-        //Br = 0.662109375, Bi = 1
-        B = 8'h02A60800
-        //wr = -1, wi = 0.2294921875
-        w = 8'hFFFF00EB
+        //Ar = -4.1, Ai = 3.9
+        A = 8'hef9a0f99;
+        //Br = 2, Bi = 4
+        B = 8'h8001000;
+        //wr = -1, wi = 1
+        w = 8'hfc000400;
 
         #10;
         Clk = 1;

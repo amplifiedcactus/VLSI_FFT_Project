@@ -5,8 +5,8 @@
 //Z is set equal to A-(B*w)
 module MultiplyAddUnit (
     input wire Clk, Rst,
-    input signed wire [31:0] A, B, w,
-    output signed wire [31:0] Y, Z
+    input signed [31:0] A, B, w,
+    output signed [31:0] Y, Z
 );
     
     //reg for real/imaginary components of operands
