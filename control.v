@@ -2,7 +2,7 @@ module control (
   input wire clk, reset,        
   output reg [3:0] stage,       
   output reg [3:0] address,     
-  output reg write_en, read_en,            
+  output reg write_en, read_en            
   //add twiddle 
 );
 
