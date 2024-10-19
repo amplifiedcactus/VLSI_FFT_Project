@@ -1,11 +1,12 @@
 //Module that takes 3 32 bit complex numbers as inputs, A, B and w. 2 32 bit complex numbers are output, Y and Z.
-//A = ar + i.ai, ar = A[31:16], ai = A[15:0], ar and ai are twos complement signed integers
+//A = ar + i.ai, ar = A[31:16], ai = A[15:0], ar and ai are twos complement Q6.10 fixed point numbers
+//Q6.10 was chosen because if our input signal and w are <=1, max output of stage 1 is 2, of stage 2 is 4, of stage 3 is 8, and of stage 4 is 16
 //Y is set equal to A+(B*w)
 //Z is set equal to A-(B*w)
 module MultiplyAddUnit (
     input wire Clk, Rst,
-    input wire [31:0] A, B, w,
-    output wire [31:0] Y, Z
+    input signed wire [31:0] A, B, w,
+    output signed wire [31:0] Y, Z
 );
     
     //reg for real/imaginary components of operands
@@ -15,7 +16,7 @@ module MultiplyAddUnit (
     reg signed [31:0] Bwr, Bwra, Bwrb, Bwi, Bwia, Bwib;
 
     //reg for results of A+(B*w) and A-(B*w)
-    reg signed [32:0] ABwr, ABwi, nABwr, nABwi;
+    reg signed [31:0] ABwr, ABwi, nABwr, nABwi;
 
 
     always@(posedge Clk)
@@ -41,17 +42,17 @@ module MultiplyAddUnit (
         //Calculate A-(B*w)
         nABwr <= Ar-Bwr;
         nABwi <= Ai-Bwi;
-        //Truncate results into outputs
-        Yr <= ABwr[32:17];
-        Yi <= ABwi[32:17];
-        Zr <= nABwr[32:17];
-        Zi <= nABwi[32:17];
+        //Truncate results into outputs (takes 6 integer bits and 10 decimal bits)
+        Yr <= ABwr[25:10];
+        Yi <= ABwi[25:10];
+        Zr <= nABwr[25:10];
+        Zi <= nABwi[25:10];
     end
 
     assign Y[31:16] = Yr;
     assign Y[15:0] = Yi;
     assign Z[31:16] = Zr;
-    assign  Z[15:0] = Zi;
+    assign Z[15:0] = Zi;
 
 
 
