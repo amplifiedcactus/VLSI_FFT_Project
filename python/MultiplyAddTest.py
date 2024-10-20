@@ -40,8 +40,8 @@ Bi = -3.766
 wr = 0.222
 wi = -0.6666
 
-Yout = 0xe79af799
-Zout = 0xf79a2799
+Yout = 0x0212e64b
+Zout = 0x049421b9
 
 #python hex function doesnt work for negative numbers
 def tohex(val, nbits):
