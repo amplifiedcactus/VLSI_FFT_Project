@@ -1,37 +1,7 @@
 from fxpmath import Fxp
 
-A = bin(0xA2095A20)
-B = bin(0xD64882D5)
-w = bin(0x1D8B6621)
-
-
-
-A1 = complex(int(A[:18], 2), int(A[18:], 2))
-B1 = complex(int(B[:18], 2), int(B[18:], 2))
-w1 = complex(int(w[:18], 2), int(w[18:], 2))
-
-Y = (B1*w1)
-
-# print(hex(int(Y.real)))
-# print(hex(int(Y.imag)))
-# print(int(Y.real))
-# print(int(Y.imag))
-
-# print(A[18:])
-# print(hex(int(A[18:], 2)))
-# print(hex(int(A[:18], 2)))
-
-
-#print(a*b)
-
-# max output of first stage:
-# A and B Inputs and w are <= 1 but complex,
-# so B*w max is 2, A+B*w max is 3, max output of first stage is 3
-# 2nd stage B*w max is 6, A+B*w max is 9
-# 3rd stage B*w max is 18, A+B*w max is 27
-# 4th stage B*w max is 54, A+B*w max is 81, but actual output of FFT should be 16 or less
-
-
+#Enter real and imaginary parts of A, B, and w below
+#Code will convert them to the correct format for input to FFT module and print the results
 
 Ar = 0.832
 Ai = 1.0023
@@ -40,8 +10,14 @@ Bi = -3.766
 wr = 0.222
 wi = -0.6666
 
+#Enter the results from simulating MultiplyAddUnit
+#Code will convert them back to decimal and print them next to expected result from inputs above
+
 Yout = 0x0212e64b
 Zout = 0x049421b9
+
+
+
 
 #python hex function doesnt work for negative numbers
 def tohex(val, nbits):
@@ -59,9 +35,7 @@ print("A: ", decimalToFixedPoint(Ar,Ai))
 print("B: ", decimalToFixedPoint(Br,Bi))
 print("w: ", decimalToFixedPoint(wr,wi), "\n")
 
-#print(hex(tohex(x.val, 16)))
-#print(hex(tohex(y.val, 16)))
-#print(hex(((tohex(x.val, 16) << 16) ^ tohex(y.val, 16))))
+
 
 
 #perform complex multiply add
@@ -77,7 +51,7 @@ print("Z: ", a-(b*w), "\n")
 
 
 #Convert back to complex decimal
-#out = 0x07fb1803
+
 
 def twos_complement_to_int(bin_num, num_bits):
     # Check if the number is negative by examining the most significant bit (MSB)
@@ -100,18 +74,4 @@ def backToDecimal(out):
 print("Actual results:")
 print("Y: ", backToDecimal(Yout))
 print("Z: ", backToDecimal(Zout))
-
-
-#code below doesn't work unfortunately
-#n = Fxp(0, signed=False, n_word=16, n_frac=10)
-#m = Fxp(0, signed=False, n_word=16, n_frac=10)
-#n.val = outr
-#m.val = outi
-
-
-
-
-#Divide by 2^ number of bits in fractional part to get integer
-#print(twos_complement_to_int(outr, 16)/1024)
-#print(twos_complement_to_int(outi, 16)/1024)
 
