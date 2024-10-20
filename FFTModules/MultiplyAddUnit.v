@@ -10,7 +10,7 @@ module MultiplyAddUnit (
 );
     
     //reg for real/imaginary components of operands
-    reg signed [15:0] Ar, Ai, Br, Bi, wr, wi, Yr, Yi, Zr, Zi;
+    reg signed [15:0] Ar, Ai, Br, Bi, wr, wi;
 
     //reg for result of B*w
     reg signed [31:0] Bwr, Bwra, Bwrb, Bwi, Bwia, Bwib;
@@ -36,23 +36,18 @@ module MultiplyAddUnit (
         Bwia <= Br*wi;
         Bwib <= Bi*wr;
         Bwi <= Bwia + Bwib;
-        //Calculate A+(B*w)
-        ABwr <= Ar+Bwr;
-        ABwi <= Ai+Bwi;
+        //Calculate A+(B*w), truncate B*w by taking only 6 integer bits and 10 decimal bits
+        ABwr <= Ar+Bwr[25:10];
+        ABwi <= Ai+Bwi[25:10];
         //Calculate A-(B*w)
-        nABwr <= Ar-Bwr;
-        nABwi <= Ai-Bwi;
-        //Truncate results into outputs (takes 6 integer bits and 10 decimal bits)
-        Yr <= ABwr[25:10];
-        Yi <= ABwi[25:10];
-        Zr <= nABwr[25:10];
-        Zi <= nABwi[25:10];
+        nABwr <= Ar-Bwr[25:10];
+        nABwi <= Ai-Bwi[25:10];
     end
 
-    assign Y[31:16] = Yr;
-    assign Y[15:0] = Yi;
-    assign Z[31:16] = Zr;
-    assign Z[15:0] = Zi;
+    assign Y[31:16] = ABwr;
+    assign Y[15:0] = ABwi;
+    assign Z[31:16] = nABwr;
+    assign Z[15:0] = nABwi;
 
 
 

@@ -32,49 +32,53 @@ Y = (B1*w1)
 # 4th stage B*w max is 54, A+B*w max is 81, but actual output of FFT should be 16 or less
 
 
-#convert complex decimal number to 2 Q6.10 fixed point twos complement binary numbers
-r = -1
-i = 1
 
-x = Fxp(r, signed=True, n_word=16, n_frac=10)
-y = Fxp(i, signed=True, n_word=16, n_frac=10)
+Ar = -4.1
+Ai = 3.9
+Br = -2
+Bi = 4
+wr = -1
+wi = 1
+
+Yout = 0xe79af799
+Zout = 0xf79a2799
 
 #python hex function doesnt work for negative numbers
 def tohex(val, nbits):
     return (val + (1 << nbits)) % (1 << nbits)
 
+#convert complex decimal number to 2 Q6.10 fixed point twos complement binary numbers
+#then convert that to 32bit hexadecimal, where real part is 16 MSBs and imaginary part is 16 LSBs
+def decimalToFixedPoint(r, i):
+    x = Fxp(r, signed=True, n_word=16, n_frac=10)
+    y = Fxp(i, signed=True, n_word=16, n_frac=10)
+    return hex(((tohex(x.val, 16) << 16) ^ tohex(y.val, 16)))
 
-#convert that to 32bit hexadecimal, where real part is 16 MSBs and imaginary part is 16 LSBs
+print("Inputs:")
+print("A: ", decimalToFixedPoint(Ar,Ai))
+print("B: ", decimalToFixedPoint(Br,Bi))
+print("w: ", decimalToFixedPoint(wr,wi), "\n")
+
 #print(hex(tohex(x.val, 16)))
 #print(hex(tohex(y.val, 16)))
-print(hex(((tohex(x.val, 16) << 16) ^ tohex(y.val, 16))))
+#print(hex(((tohex(x.val, 16) << 16) ^ tohex(y.val, 16))))
 
 
 #perform complex multiply add
 
 
-a = complex(-4.1, 3.9)
-b = complex(2, 4)
-w = complex (-1, 1)
-print(a+(b*w))
-print(a-(b*w))
+a = complex(Ar, Ai)
+b = complex(Br, Bi)
+w = complex (wr, wi)
+print("Expected results in decimal:")
+print("Y: ", a+(b*w))
+print("Z: ", a-(b*w), "\n")
+
 
 
 #Convert back to complex decimal
-out = 0x1533f800
+#out = 0x07fb1803
 
-outr = out >> 16
-outi = out & 0x0000FFFF
-
-
-#code below doesn't work unfortunately
-n = Fxp(0, signed=False, n_word=16, n_frac=10)
-m = Fxp(0, signed=False, n_word=16, n_frac=10)
-n.val = outr
-m.val = outi
-
-
-#this works
 def twos_complement_to_int(bin_num, num_bits):
     # Check if the number is negative by examining the most significant bit (MSB)
     if (bin_num & (1 << (num_bits - 1))) != 0:  # MSB is 1, meaning it's negative
@@ -86,7 +90,28 @@ def twos_complement_to_int(bin_num, num_bits):
     
     return int_value
 
+def backToDecimal(out):
+    outr = out >> 16
+    outi = out & 0x0000FFFF
+    return complex(twos_complement_to_int(outr, 16)/1024, twos_complement_to_int(outi, 16)/1024)
+    #print(twos_complement_to_int(outr, 16)/1024)
+    #print(twos_complement_to_int(outi, 16)/1024)
+
+print("Actual results:")
+print("Y: ", backToDecimal(Yout))
+print("Z: ", backToDecimal(Zout))
+
+
+#code below doesn't work unfortunately
+#n = Fxp(0, signed=False, n_word=16, n_frac=10)
+#m = Fxp(0, signed=False, n_word=16, n_frac=10)
+#n.val = outr
+#m.val = outi
+
+
+
+
 #Divide by 2^ number of bits in fractional part to get integer
-print(twos_complement_to_int(outr, 16)/1024)
-print(twos_complement_to_int(outi, 16)/1024)
+#print(twos_complement_to_int(outr, 16)/1024)
+#print(twos_complement_to_int(outi, 16)/1024)
 
