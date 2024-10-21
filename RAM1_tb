@@ -1,0 +1,80 @@
+`timescale 1ns / 1ps
+
+module RAM1_tb;
+
+  // Parameters
+  parameter DATA_BIT_WIDTH = 32;
+  parameter ADDR_BIT_WIDTH = 16;
+  parameter SIMULATION_CYCLES = 1000;
+
+  // Signals
+  reg [ADDR_BIT_WIDTH-1:0] write_addr, read_addr;
+  reg [DATA_BIT_WIDTH-1:0] data_in;
+  reg write_en, clk;
+  wire [DATA_BIT_WIDTH-1:0] data_out;
+
+  // Instantiate the RAM module
+  RAM #(
+    .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
+    .ADDR_BIT_WIDTH(ADDR_BIT_WIDTH)
+  ) dut (
+    .write_addr(write_addr),
+    .read_addr(read_addr),
+    .data_in(data_in),
+    .write_en(write_en),
+    .clk(clk),
+    .data_out(data_out)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+  // Test vectors
+  initial begin
+    // Initialize inputs
+    write_addr = 0;
+    read_addr = 0;
+    data_in = 0;
+    write_en = 0;
+
+    // Reset
+    #10;
+    
+    // Run test for SIMULATION_CYCLES
+    repeat (SIMULATION_CYCLES) begin
+      // Generate random inputs
+      write_addr = $random;
+      read_addr = $random;
+      data_in = $random;
+      write_en = $random;
+
+      // Wait for one clock cycle
+      @(posedge clk);
+
+      // Check if write operation was performed
+      if (write_en) begin
+        // Read the written data in the next cycle
+        @(posedge clk);
+        read_addr = write_addr;
+        @(posedge clk);
+        if (data_out !== data_in) begin
+          $display("Error: Write/Read mismatch. Addr: %h, Written: %h, Read: %h", write_addr, data_in, data_out);
+        end
+      end
+    end
+
+    // Test complete
+    $display("Testbench completed after %d cycles", SIMULATION_CYCLES);
+    $finish;
+  end
+
+  // Optional: Dump waveforms
+  initial begin
+    $dumpfile("ram_tb.vcd");
+    $dumpvars(0, RAM_tb);
+  end
+
+endmodule
